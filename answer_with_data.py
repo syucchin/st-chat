@@ -4,28 +4,31 @@ import openai
 import streamlit as st
 from acs_lib import *
 
+# タイトルの設定
 st.title("Answer with Data")
 
-#OS環境変数からキーを入手する
+#OSの環境変数から読み込み
 API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 RESOURCE_ENDPOINT = os.getenv("AZURE_ENDPOINT_FQDN")
 
-#OpenAI上必要な変数設定を実装する
+#OpenAIの設定
 openai.api_type = "azure"                     #APITYPEの指定をAzure用に指定
 openai.api_key = API_KEY                      #APIキーを指定
 openai.api_base = RESOURCE_ENDPOINT         #アクセスエンドポイントを指定
 openai.api_version = "2023-03-15-preview"     #適合するAPIバージョンを指定
 
+# acs_lib.py からインスタンスを作成
 acs = ACS_CLASS()
 
-if "openai_model" not in st.session_state:
-#     st.session_state["openai_model"] = "gpt-3.5-turbo"
-    st.session_state["openai_model"] = "gpt-4"
+# 使用するGPTモデルの設定
+st.session_state["openai_model"] = "gpt-4"
 
+# streamlit のセッション情報に messages が存在しない場合に作成
 if "messages" not in st.session_state:
     st.session_state.messages = []
     # st.session_state.messages.append({"role": "system", "content": "ギャル語で話して"})
 
+# messages から message をループで取り出し、systemロール以外を表示
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         if message["role"] == "system":
@@ -33,13 +36,20 @@ for message in st.session_state.messages:
         else:
             st.markdown(message["content"])
 
+#
+# プロンプト入力に伴う処理
+# 
 if prompt := st.chat_input("入力してください"):
+    # 入力された promptを messages に追加
     st.session_state.messages.append({"role": "user", "content": prompt})
+    # user ロールのメッセージを表示
     with st.chat_message("user"):
         st.markdown(prompt)
 
+    # Azure Cognitive Search に対して prompt で検索をかけ、結果を取得
     acs_results = acs.search_vector_query(prompt)
 
+    # system メッセージの作成
     system_message =f"""
     Answer the question as truthfully as possible using the provided text below, and if you're unsure of the answer, say Sorry, 'I don't know'. You must answer in Japanese.
     
@@ -50,14 +60,17 @@ if prompt := st.chat_input("入力してください"):
     {acs_results[2]['content']}
     
     """
-    # print(system_message)
 
+    # system メッセージを messages に追加
     st.session_state.messages.append({"role": "system", "content": system_message})
 
-    print(st.session_state)
+    # print(st.session_state)
 
+    # GPTに messages を投げて結果を取得し表示
     with st.chat_message("assistant"):
+        # GPTからの応答を保存する場所
         message_placeholder = st.empty()
+        # 最終的なすべての応答を作るための変数
         full_response = ""
         for response in openai.ChatCompletion.create(
             # model = st.session_state["openai_model"],
