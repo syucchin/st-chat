@@ -4,7 +4,7 @@ import openai
 import streamlit as st
 from acs_lib import *
 
-st.title("ChatGPT-like clone")
+st.title("Answer with Data")
 
 #OS環境変数からキーを入手する
 API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
