@@ -17,11 +17,19 @@ openai.api_key = API_KEY                      #APIキーを指定
 openai.api_base = RESOURCE_ENDPOINT         #アクセスエンドポイントを指定
 openai.api_version = "2023-03-15-preview"     #適合するAPIバージョンを指定
 
+with st.sidebar:
+    st.image("Demo.png")
+    st.subheader("Configuration")
+    index = st.text_input("index select", value="idx-aoai-jp-1")
+    st.text("idx-aoai-ads-001 : On Your Data\nidx-aoai-jp-1 : Vector Index")
+    vector = st.checkbox("Vector", value=True)
+    model = st.text_input("model select", value="gpt-4")
+
 # acs_lib.py からインスタンスを作成
-acs = ACS_CLASS()
+acs = ACS_CLASS(index)
 
 # 使用するGPTモデルの設定
-st.session_state["openai_model"] = "gpt-4"
+st.session_state["openai_model"] = model
 
 # streamlit のセッション情報に messages が存在しない場合に作成
 if "messages" not in st.session_state:
@@ -47,7 +55,10 @@ if prompt := st.chat_input("入力してください"):
         st.markdown(prompt)
 
     # Azure Cognitive Search に対して prompt で検索をかけ、結果を取得
-    acs_results = acs.search_vector_query(prompt)
+    if(vector):
+        acs_results = acs.search_vector_query(prompt)
+    else:
+        acs_results = acs.search_query(prompt)
 
     # system メッセージの作成
     system_message =f"""
