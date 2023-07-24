@@ -18,7 +18,7 @@ openai.api_base = RESOURCE_ENDPOINT         #アクセスエンドポイント�
 openai.api_version = "2023-03-15-preview"     #適合するAPIバージョンを指定
 
 with st.sidebar:
-    st.image("Demo.png")
+    st.image("Demo2.png")
     st.subheader("Configuration")
     index = st.text_input("index select", value="idx-aoai-jp-1")
     st.text("idx-aoai-ads-001 : On Your Data\nidx-aoai-jp-1 : Vector Index")
