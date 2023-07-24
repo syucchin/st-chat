@@ -80,7 +80,10 @@ class ACS_CLASS:
            id = search_result['id']
            content = search_result['content']
            score = search_result['@search.score']
-           results.append({"id": id, "score": score, "content": content})
+           title = search_result['title']
+           filepath = search_result['filepath']
+           url = search_result['url']
+           results.append({"id": id, "score": score, "content": content, "title": title, "filepath": filepath, "url": url})
            i += 1
 
         #print(type(results))
@@ -100,7 +103,10 @@ class ACS_CLASS:
            id = search_result['id']
            content = search_result['content']
            score = search_result['@search.score']
-           results.append({"id": id, "score": score, "content": content})
+           title = search_result['title']
+           filepath = search_result['filepath']
+           url = search_result['url']
+           results.append({"id": id, "score": score, "content": content, "title": title, "filepath": filepath, "url": url})
            i += 1
 
         #print(type(results))

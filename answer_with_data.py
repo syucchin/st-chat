@@ -84,7 +84,6 @@ if prompt := st.chat_input("入力してください"):
         # 最終的なすべての応答を作るための変数
         full_response = ""
         for response in openai.ChatCompletion.create(
-            # model = st.session_state["openai_model"],
             engine = st.session_state["openai_model"],
             messages = [
                 {"role": m["role"], "content": m["content"]}
@@ -98,6 +97,22 @@ if prompt := st.chat_input("入力してください"):
             else:
                 print("No response generated")
         message_placeholder.markdown(full_response)
+        dicdata0 = {
+            'filepath': acs_results[0]['filepath'],
+            'content': acs_results[0]['content'],
+        }
+        st.json(dicdata0)
+        dicdata1 = {
+            'filepath': acs_results[1]['filepath'],
+            'content': acs_results[1]['content'],
+        }
+        st.json(dicdata1)
+        dicdata2 = {
+            'filepath': acs_results[2]['filepath'],
+            'content': acs_results[2]['content'],
+        }
+        st.json(dicdata2)
+
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
 print(st.session_state)
