@@ -35,7 +35,7 @@ from azure.search.documents.indexes.models import (
 
 #OS環境変数からキーを入手する
 OPENAI_KEY = os.getenv("AZURE_OPENAI_API_KEY")
-RESOURCE_ENDPOINT = os.getenv("AZURE_ENDPOINT_FQDN")
+RESOURCE_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT_FQDN")
 
 # ACS Integration Settings
 SEARCH_SERVICE = os.environ.get("AZURE_SEARCH_SERVICE")
